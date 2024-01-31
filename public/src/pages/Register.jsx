@@ -1,6 +1,6 @@
-import React , {useCallback, useState} from 'react';
+import React , {useCallback, useState, useEffect} from 'react';
 import styled from "styled-components";
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import logo from "../assets/logo.png"
 import {ToastContainer, toast} from "react-toastify" ;
 import "react-toastify/dist/ReactToastify.css";
@@ -10,6 +10,8 @@ import {registerRoute} from '../utils/APIRoutes';
 
 export default function Register() {
 
+
+  const navigate = useNavigate();
     const [values , setValues] = useState({
         username : "",
         email : "",
@@ -24,12 +26,15 @@ export default function Register() {
         theme: "dark"
     };
 
+    useEffect(()=>{
+      if(localStorage.getItem('chat-app-user')){
+        navigate('/')
+      }
+    },[])
 
     const handleValidation =()=>{
         const {password, confirmPassword, username, email}=values;
         if(password!==confirmPassword){
-            console.log(password );
-            console.log(confirmPassword);
             toast.error("password and confirm password should be same." , toastOptions) ;
             return false;
         }
@@ -52,13 +57,19 @@ export default function Register() {
         event.preventDefault();
         if(handleValidation()){
             
-            const {password, confirmPassword, username, email}=values;
-            const {data} = await axios.post(registerRoute,{
+            const {password, username, email}=values;
+            const { data }   = await axios.post(registerRoute,{
                 username,
                 email,
                 password,
             });
-            console.log("validated" , registerRoute);
+            if(data.status===false){
+              toast.error(data.msg, toastOptions);
+            }
+            if(data.status===true){
+              localStorage.setItem('chat-app-user', JSON.stringify(data.user));
+              navigate("/");
+            }
         }
     }
 
