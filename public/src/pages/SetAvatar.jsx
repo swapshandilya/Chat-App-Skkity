@@ -34,14 +34,15 @@ export default function SetAvatar() {
       const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
         image: avatars[selectedAvatar],
       });
-      console.log(data);
+      // console.log(data);
       if (data.isSet) {
+        // console.log(data.isSet);
         user.isAvatarImageSet = true;
-        user.avatarImage = data.Image;
+        user.avatarImage = data.image;
         localStorage.setItem("chat-app-user", JSON.stringify(user));
-        navigate("/Chat");
+        navigate("/chat");
       } else {
-        toast.error("Try Again");
+        toast.error("Try Again" , toastOptions);
       }
     }
   };
