@@ -6,12 +6,17 @@ const messagesRoute = require("./routes/messagesRoute.js");
 const app = express();
 require("dotenv").config();
 const socket = require("socket.io");
-
+const path = require("path")
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname,'./client/build')))
 app.use("/api/auth", userRoutes);
 app.use("/api/messages", messagesRoute);
+
+app.use("*" , (req,res)=>{
+    res.sendFile(path.jojin(__dirname, "./client/build/index.html"));
+});
 
 mongoose.connect(process.env.MONGO_URL,{
     useNewUrlParser: true,
