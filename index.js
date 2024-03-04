@@ -34,10 +34,7 @@ if(process.env.NODE_ENV==="production"){
 
 // ------------------------------------------------------------------
 
-mongoose.connect(process.env.MONGO_URL,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(()=>{
+mongoose.connect(process.env.MONGO_URL).then(()=>{
     console.log(" db connected successfully")
 }). catch((err)=>{
     console.log(err);
